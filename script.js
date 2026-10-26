@@ -6,6 +6,8 @@ const submit = document.querySelector('#submit');
 const historyElement = document.querySelector('#history');
 const storageKey = 'kalib-downloads-v1';
 let selectedType = 'all';
+let backendAvailable = false;
+const backendReady = fetch('/api/health').then(r => r.ok ? r.json() : null).then(data => { backendAvailable = data?.ok === true; }).catch(() => {});
 let downloads = [];
 try {
   const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
@@ -81,9 +83,14 @@ form.addEventListener('submit', async event => {
     url = new URL(input.value.trim());
     if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password) throw new Error();
   } catch { message('Masukkan pautan HTTP atau HTTPS yang sah tanpa maklumat log masuk.', true); return; }
+  await backendReady;
   const host = url.hostname.toLowerCase();
-  if (['youtube.com', 'youtu.be', 'youtube-nocookie.com', 'scribd.com'].some(domain => host === domain || host.endsWith(`.${domain}`))) {
-    message('Pautan halaman YouTube atau Scribd belum disokong. Gunakan pilihan muat turun rasmi atau URL fail terus yang anda dibenarkan akses.', true);
+  if (['youtube.com', 'youtu.be', 'youtube-nocookie.com'].some(domain => host === domain || host.endsWith(`.${domain}`))) {
+    message('Pautan halaman YouTube belum disokong. Gunakan pilihan muat turun rasmi atau URL fail terus yang anda dibenarkan akses.', true);
+    return;
+  }
+  if ((host === 'scribd.com' || host.endsWith('.scribd.com')) && !backendAvailable) {
+    message('Backend belum tersedia di laman ini. GitHub Pages tidak menjalankan backend; buka aplikasi pada pelayan Node.js untuk semakan pautan PDF awam Scribd.', true);
     return;
   }
   submit.disabled = true;
@@ -92,12 +99,18 @@ form.addEventListener('submit', async event => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 120000);
   try {
-    const response = await fetch(url.href, { signal: controller.signal, credentials: 'omit', referrerPolicy: 'no-referrer' });
+    const response = backendAvailable
+      ? await fetch('/api/download', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url: url.href }), signal: controller.signal })
+      : await fetch(url.href, { signal: controller.signal, credentials: 'omit', referrerPolicy: 'no-referrer' });
+    if (!response.ok && backendAvailable) {
+      const error = await response.json();
+      throw new Error(error.error || 'Backend tidak dapat memuat turun fail.');
+    }
     if (!response.ok) throw new Error(`Pelayan memberi respons HTTP ${response.status}. Semak pautan dan kebenaran akses.`);
     const mime = (response.headers.get('content-type') || '').split(';')[0].trim().toLowerCase();
-    const finalUrl = new URL(response.url || url.href);
+    const finalUrl = new URL(backendAvailable ? url.href : response.url || url.href);
     let name;
-    try { name = decodeURIComponent(finalUrl.pathname.split('/').pop() || ''); } catch { name = ''; }
+    try { name = decodeURIComponent(response.headers.get('x-file-name') || finalUrl.pathname.split('/').pop() || ''); } catch { name = ''; }
     const extension = name.split('.').pop().toLowerCase();
     if (selectedType === 'pdf' && mime !== 'application/pdf' && extension !== 'pdf') throw new Error('Pautan ini tidak memberikan fail PDF. Pilih jenis fail yang sesuai.');
     if (selectedType === 'video' && !mime.startsWith('video/') && !['mp4', 'webm', 'mov', 'm4v', 'ogv'].includes(extension)) throw new Error('Pautan ini tidak memberikan fail video terus. Gunakan URL seperti .mp4 atau .webm.');
