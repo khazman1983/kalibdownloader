@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kalib — File & Video Downloader</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="site-shell">
+  <header class="topbar"><a class="brand" href="./"><span class="logo">↓</span>kalib<span class="brand-dot">.</span></a><nav><a href="#download">Downloader</a><a href="#guide">Cara guna</a><a href="#faq">Soalan lazim</a></nav><a class="header-action" href="#download">Mula muat turun <span>→</span></a></header>
+  <main>
+    <section class="hero" id="download">
+      <div class="eyebrow"><span></span> FILE & VIDEO DOWNLOADER</div>
+      <h1><span class="headline-row">Klik <span class="visual-pill" aria-hidden="true"><span class="orbit"></span><span class="mini-document">PDF<span>≡</span></span><span class="floating-arrow">↓</span><span class="mini-play">▷</span></span> Simpan.</span><span class="headline-row">Semudah itu.</span></h1>
+      <div class="hero-actions"><a class="hero-cta" href="#download-form">MUAT TURUN <span>↓</span></a><a class="help-link" href="#guide">CARA GUNA <span>→</span></a></div>
+      <p class="intro">Muat turun dokumen, video dan fail web daripada pautan terus.<br>Pantas, ringkas, dan terus ke peranti anda.</p>
+      <div class="download-card">
+        <div class="tabs" role="group" aria-label="Jenis muat turun"><button class="tab active" data-type="all" aria-pressed="true">↓ <span>Semua fail</span></button><button class="tab" data-type="pdf" aria-pressed="false">▤ <span>Dokumen PDF</span></button><button class="tab" data-type="video" aria-pressed="false">▷ <span>Video</span></button><button class="tab" data-type="web" aria-pressed="false">⌘ <span>HTML / CSS / JS</span></button></div>
+        <form id="download-form">
+          <label for="url">Pautan fail anda</label>
+          <div class="input-row"><span aria-hidden="true">→</span><input id="url" name="url" type="url" placeholder="https://example.com/dokumen.pdf" required autocomplete="url"><button type="button" class="paste" id="paste">Tampal</button></div>
+          <div class="form-bottom"><span class="privacy">♧ Diproses dalam pelayar anda</span><button class="primary" id="submit" type="submit">Muat turun fail <span>↓</span></button></div>
+          <p id="status" role="status" aria-live="polite"></p>
+        </form>
+        <div class="supported"><span>PAUTAN TERUS</span><b>PDF</b><b>MP4</b><b>WEBM</b><b>HTML</b><b>CSS</b><b>JS</b><b>+ lain-lain</b></div>
+      </div>
+      <p class="small-note">Gunakan fail milik anda atau kandungan yang anda mempunyai kebenaran untuk muat turun.</p>
+    </section>
+    <section class="history-section"><div class="section-heading"><div><span class="eyebrow">RUANG SIMPANAN ANDA</span><h2>Muat turun terkini</h2></div><button id="clear" class="text-button">Kosongkan senarai</button></div><div id="history" class="history"></div></section>
+    <section class="guide" id="guide"><div><span class="eyebrow">MUDAH DARI MULA</span><h2>Tiga langkah. Siap.</h2><p>Tiada pemasangan. Tiada pendaftaran.</p></div><article><span class="step">01</span><h3>Salin pautan</h3><p>Salin URL terus ke dokumen, video atau fail yang anda perlukan.</p></article><article><span class="step">02</span><h3>Tampal di sini</h3><p>Masukkan pautan dan pilih jenis fail untuk semakan format.</p></article><article><span class="step">03</span><h3>Simpan fail</h3><p>Klik muat turun dan simpan fail ke peranti anda.</p></article></section>
+    <section class="faq" id="faq"><span class="eyebrow">PERLU TAHU</span><h2>Soalan lazim</h2><details><summary>Bolehkah saya muat turun daripada YouTube atau Scribd?</summary><p>Versi ini menyokong URL fail terus. Pautan halaman YouTube dan Scribd memerlukan integrasi backend atau API yang dibenarkan. Gunakan pilihan muat turun rasmi platform tersebut jika tersedia.</p></details><details><summary>Mengapa sesetengah pautan tidak berfungsi?</summary><p>Pelayan sumber mungkin menyekat permintaan pelayar (CORS), memerlukan log masuk, atau pautan mungkin telah tamat tempoh. Gunakan URL fail terus yang boleh diakses tanpa log masuk.</p></details><details><summary>Adakah pautan saya disimpan?</summary><p>Senarai terkini disimpan dalam pelayar pada peranti ini sahaja. Gunakan “Kosongkan senarai” untuk membuangnya. Permintaan fail dihantar terus ke pelayan sumber.</p></details></section>
+  </main>
+  <footer><a class="brand" href="./">kalib<span class="brand-dot">.</span></a><span>Fail anda. Dalam simpanan anda.</span><span>Dibina untuk memudahkan.</span></footer>
+  </div>
+</body>
+</html>
